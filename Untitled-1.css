@@ -1,0 +1,44 @@
+function handleCellClick(event) {
+    const cell = event.target;
+    const index = cell.dataset.index;
+
+    if (boardState[index] !== null || checkWin('X') || checkWin('O')) {
+        return;
+    }
+
+    boardState[index] = currentPlayer;
+    cell.textContent = currentPlayer;
+
+    if (checkWin(currentPlayer)) {
+        alert(${currentPlayer} wins!);
+        resetGame();
+    } else if (boardState.every(cell => cell !== null)) {
+        alert('Draw!');
+        resetGame();
+    } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        if (currentPlayer === 'O') {
+            aiMove();
+        }
+    }
+}
+
+function aiMove() {
+    let emptyCells = boardState
+        .map((value, index) => (value === null ? index : null))
+        .filter(index => index !== null);
+
+    const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    boardState[randomIndex] = 'O';
+    cells[randomIndex].textContent = 'O';
+
+    if (checkWin('O')) {
+        alert('O wins!');
+        resetGame();
+    } else if (boardState.every(cell => cell !== null)) {
+        alert('Draw!');
+        resetGame();
+    } else {
+        currentPlayer = 'X';
+    }
+}
